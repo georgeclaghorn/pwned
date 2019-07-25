@@ -25,9 +25,14 @@ module Pwned
     ##
     # The default request options that are used to make HTTP requests to the
     # API. A user agent is provided as requested in the documentation.
+    #
+    # The open and read timeouts default to 1 second each.
+    #
     # @see https://haveibeenpwned.com/API/v2#UserAgent
     DEFAULT_REQUEST_OPTIONS = {
-      "User-Agent" => "Ruby Pwned::Password #{Pwned::VERSION}"
+      "User-Agent"  => "Ruby Pwned::Password #{Pwned::VERSION}",
+      :open_timeout => 1,
+      :read_timeout => 1
     }.freeze
 
     ##
@@ -48,6 +53,10 @@ module Pwned
     #   calling the API
     # @option request_options [String] 'User-Agent' ("Ruby Pwned::Password #{Pwned::VERSION}")
     #   The user agent used when making an API request.
+    # @options request_options [Integer] :open_timeout (1)
+    #   The open timeout for connecting to the HIBP API in seconds.
+    # @options request_options [Integer] :read_timeout (1)
+    #   The response timeout for HIBP API requests in seconds.
     # @return [Boolean] Whether the password appears in the data breaches or not.
     # @raise [TypeError] if the password is not a string.
     # @since 1.1.0

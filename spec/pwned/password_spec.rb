@@ -141,5 +141,21 @@ RSpec.describe Pwned::Password do
         with(headers: { "User-Agent" => "Super fun user agent" })).
         to have_been_made.once
     end
+
+    it "defaults to one-second timeouts" do
+      password = Pwned::Password.new("password")
+      expect(password).to \
+        receive(:open).with("https://api.pwnedpasswords.com/range/5BAA6",
+          "User-Agent" => "Ruby Pwned::Password #{Pwned::VERSION}", open_timeout: 1, read_timeout: 1)
+      password.pwned?
+    end
+
+    it "allows the open and read timeouts to be set" do
+      password = Pwned::Password.new("password", { open_timeout: 5, read_timeout: 5 })
+      expect(password).to \
+        receive(:open).with("https://api.pwnedpasswords.com/range/5BAA6",
+          "User-Agent" => "Ruby Pwned::Password #{Pwned::VERSION}", open_timeout: 5, read_timeout: 5)
+      password.pwned?
+    end
   end
 end
